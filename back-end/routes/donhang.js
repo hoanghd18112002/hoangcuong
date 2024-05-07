@@ -4,8 +4,8 @@ var db = require('./dbconnect');
 
 const ensureToken = require('./auth');
 
-//Lấy về danh sách đơn hàng sắp xếp theo ID---------------------------
-route.get('/getall', ensureToken, function(req, res){
+//Lấy về danh sách đơn hàng sắp xếp theo ngày đặt---------------------------
+route.get('/get-desc', ensureToken, function(req, res){
     var sql = "CALL sp_donhang_getall_desc()";
 
     db.query(sql, (err, rows) => {
@@ -14,8 +14,8 @@ route.get('/getall', ensureToken, function(req, res){
     });
 });
 
-//Lấy về danh sách đơn hàng theo người dùng----------------------------
-route.get('/getbynguoidung/:id', ensureToken, function(req, res){
+//Lấy về danh sách đơn hàng theo người dùng-----------------------------
+route.get('/get-by-nguoi-dung/:id', ensureToken, function(req, res){
     var id = req.params.id;
     
     var sql = "CALL sp_donhang_getbynguoidung(?)";
@@ -26,18 +26,20 @@ route.get('/getbynguoidung/:id', ensureToken, function(req, res){
     });
 });
 
-//Lấy về đơn hàng mới nhất--------------------------------------------
-route.get('/getnew', ensureToken, function(req, res){
-    var sql = "CALL sp_donhang_getnew()";
+//Lấy về danh sách chi tiết đơn hàng theo đơn hàng----------------------
+route.get('/get-by-don-hang/:id', ensureToken, function(req, res){
+    var id = req.params.id;
+    
+    var sql = "CALL sp_ctdonhang_getbydonhang(?)";
 
-    db.query(sql, (err, rows) => {
+    db.query(sql, [id], (err, rows) => {
         if (err) return res.status(500).json({ error: "Có lỗi xảy ra" });
-        res.json({ success: true, message: "Lấy đơn hàng mới nhất thành công", data: rows[0] });
+        res.json({ success: true, message: "Lấy theo ID thành công", data: rows[0] });
     });
 });
 
 //Lấy về 1------------------------------------------------------------
-route.get('/getbyid/:id', ensureToken, function(req, res){
+route.get('/get-by-id/:id', function(req, res){
     var id = req.params.id;
     
     var sql = "CALL sp_donhang_getbyid(?)";
@@ -49,28 +51,30 @@ route.get('/getbyid/:id', ensureToken, function(req, res){
 });
 
 //Thêm---------------------------------------------------------------
-route.post('/create', ensureToken, function(req, res) {
-    var ten = req.body.ten;
-    var diachi = req.body.diaChi;
-    var sdt = req.body.sdt;
-    var kieugiaohang = req.body.kieuGiaoHang;
-    var ghichu = req.body.ghiChu;
-    var trangthai = req.body.trangThai;
-    var idphuongthuc = req.body.idPhuongThuc;
-    var idnguoidung = req.body.idNguoiDung;
+route.post('/create', function(req, res) {
+    var ten = req.body.Ten;
+    var diachi = req.body.DiaChi;
+    var sodienthoai = req.body.SoDienThoai; 
+    var trangthai = req.body.TrangThai;
+    var idnguoidung = req.body.NguoiDung_ID;
+    var listchitiet = req.body.ListChiTiet; // Không cần chuyển đổi thành chuỗi JSON
 
-    var sql = "CALL sp_donhang_create( ?, ?, ?, ?, ?, ?, ?, ?)";
+    var jsonData = JSON.stringify(listchitiet);
 
-    db.query(sql, [ten, diachi, sdt, kieugiaohang, ghichu, trangthai, idphuongthuc, idnguoidung], (err, rows) => {
-        if (err) return res.status(500).json({ error: "Có lỗi xảy ra" });
+    var sql = "CALL sp_donhang_create(?, ?, ?, ?, ?, ?)";
+
+    db.query(sql, [ten, diachi, sodienthoai, trangthai, idnguoidung, jsonData], (err, rows) => {
+        if (err) return res.status(500).json({ error: "Có lỗi xảy ra"});
         res.json({ success: true, message: "Thêm thành công", data: rows[0] });
     });
 });
 
-//Sửa---------------------------------------------------------------
-route.post('/update/:id', ensureToken, function(req, res){
-    var id = req.params.id;
-    var trangthai = req.body.trangThai;
+
+
+//Sửa thay đổi trạng thái--------------------------------------------
+route.put('/update', ensureToken, function(req, res){
+    var id = req.body.ID;
+    var trangthai = req.body.TrangThai;
 
     var sql = "CALL sp_donhang_update(?, ?)";
 

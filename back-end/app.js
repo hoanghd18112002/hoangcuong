@@ -32,10 +32,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //Khai báo ứng dụng mới-----------------------------------------------------
 
-//Chi tiết đơn hàng
-var ctdonhangRouter = require('./routes/ctdonhang');
-app.use('/ctdonhang', ctdonhangRouter);
-
 //Đơn hàng
 var donhangRouter = require('./routes/donhang');
 app.use('/donhang', donhangRouter);
