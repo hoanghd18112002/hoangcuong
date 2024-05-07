@@ -11,7 +11,7 @@
  Target Server Version : 80030
  File Encoding         : 65001
 
- Date: 07/05/2024 18:38:36
+ Date: 07/05/2024 18:57:57
 */
 
 SET NAMES utf8mb4;
@@ -677,6 +677,21 @@ BEGIN
 		INNER JOIN loaisanpham l ON s.loai_id = l.id
 		WHERE s.loai_id = p_id
 		ORDER BY s.ngaytao DESC;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for sp_sanpham_random
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_sanpham_random`;
+delimiter ;;
+CREATE PROCEDURE `sp_sanpham_random`()
+BEGIN
+    SELECT s.*, l.ten AS TenLoai
+		FROM sanpham s 
+		INNER JOIN loaisanpham l ON s.loai_id = l.id
+		ORDER BY RAND();
 END
 ;;
 delimiter ;

@@ -41,6 +41,21 @@ route.get('/get-desc', function(req, res){
     });
 });
 
+//Lấy về danh sách sản phẩm ngẫu nhiên-------------------------------------
+route.get('/get-random', function(req, res){
+    var sql = "CALL sp_sanpham_random()";
+
+    db.query(sql, (err, rows) => {
+        if (err) return res.status(500).json({ error: "Có lỗi xảy ra" });
+
+        rows[0].forEach(slide => {
+            slide.Anh = Buffer.from(slide.Anh).toString('base64');
+        });
+
+        res.json({ success: true, message: "Lấy danh sách thành công", data: rows[0] });
+    });
+});
+
 //Lấy về 1------------------------------------------------------------------
 route.get('/get-by-id/:id', function(req, res){
     var id = req.params.id;
