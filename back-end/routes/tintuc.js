@@ -13,7 +13,7 @@ const duongdan = path.join(__dirname, '../upload/');
 
 //Lấy về danh sách tin tức sắp xếp theo tăng dần------------------------------
 route.get('/get-asc', function(req, res){
-    var sql = "CALL sp_slide_getall_asc()";
+    var sql = "CALL sp_tintuc_getall_asc()";
 
     db.query(sql, (err, rows) => {
         if (err) return res.status(500).json({ error: "Có lỗi xảy ra" });
@@ -26,9 +26,9 @@ route.get('/get-asc', function(req, res){
     });
 });
 
-//Lấy về danh sách slide sắp xếp theo giảm dần------------------------------
+//Lấy về danh sách tin tức sắp xếp theo giảm dần------------------------------
 route.get('/get-desc', function(req, res){
-    var sql = "CALL sp_slide_getall_desc()";
+    var sql = "CALL sp_tintuc_getall_desc()";
 
     db.query(sql, (err, rows) => {
         if (err) return res.status(500).json({ error: "Có lỗi xảy ra" });
@@ -45,7 +45,7 @@ route.get('/get-desc', function(req, res){
 route.get('/get-by-id/:id', function(req, res){
     var id = req.params.id;
     
-    var sql = "CALL sp_slide_getbyid(?)";
+    var sql = "CALL sp_tintuc_getbyid(?)";
 
     db.query(sql, [id], (err, rows) => {
         if (err) return res.status(500).json({ error: "Có lỗi xảy ra" });
@@ -88,11 +88,13 @@ route.post('/create', ensureToken, function(req, res) {
 
 //Thêm-------------------------------------------------------------
 function create(req, res, img) {
+    var ten = req.body.Ten;
     var anh = img;
+    var noidung = req.body.NoiDung;
 
-    var sql = "CALL sp_slide_create(?)";
+    var sql = "CALL sp_tintuc_create(?, ?, ?)";
 
-    db.query(sql, [anh], (err, rows) => {
+    db.query(sql, [ten, anh, noidung], (err, rows) => {
         if (err) return res.status(500).json({ error: "Có lỗi xảy ra" });
         res.json({ success: true, message: "Thêm thành công", data: rows[0] });
     });
@@ -129,11 +131,13 @@ route.put('/update', ensureToken, function(req, res) {
 //Sửa--------------------------------------------------------------
 function update(req, res, img) {
     var id = req.body.ID;
+    var ten = req.body.Ten;
     var anh = img;
+    var noidung = req.body.NoiDung;
 
-    var sql = "CALL sp_slide_update(?, ?)";
+    var sql = "CALL sp_tintuc_update(?, ?, ?, ?)";
 
-    db.query(sql, [id, anh], (err, rows) => {
+    db.query(sql, [id, ten, anh, noidung], (err, rows) => {
         if (err) return res.status(500).json({ error: "Có lỗi xảy ra" });
         res.json({ success: true, message: "Sửa thành công", data: rows[0] });
     });
@@ -143,7 +147,7 @@ function update(req, res, img) {
 route.delete('/delete/:id', ensureToken, function(req,res){
     var id = req.params.id;
     
-    var sql = "CALL sp_slide_delete(?)";
+    var sql = "CALL sp_tintuc_delete(?)";
 
     db.query(sql, [id], (err, rows) => {
         if (err) return res.status(500).json({ error: "Có lỗi xảy ra" });

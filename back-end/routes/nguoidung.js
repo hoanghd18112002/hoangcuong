@@ -8,13 +8,10 @@ const ensureToken = require('./auth');
 
 var router = express.Router();
 
-const path = require('path');
-const duongdan = path.join(__dirname, '../../front-end/src/assets/client/img');
-
 //Đăng nhập với tài khoản và mật khẩu---------------------------------
 route.post('/login', function(req, res) {
-    var taikhoan = req.body.taiKhoan;
-    var matkhau = req.body.matKhau;
+    var taikhoan = req.body.TaiKhoan;
+    var matkhau = req.body.MatKhau;
 
     var hashedPassword = crypto.createHash('md5').update(matkhau).digest('hex');
 
@@ -27,9 +24,9 @@ route.post('/login', function(req, res) {
             const user = rows[0][0];
 
             // Tạo token JWT
-            const token = jwt.sign({ taiKhoan: user.taiKhoan }, 'my_secret_key', { expiresIn: '1h' });
+            const token = jwt.sign({ taiKhoan: user.taiKhoan }, 'my_secret_key', { expiresIn: '1d' });
 
-            user.token = token;
+            user.Token = token;
 
             res.json({ success: true, message: "Đăng nhập thành công", data: user });
         } else {
@@ -38,21 +35,8 @@ route.post('/login', function(req, res) {
     });
 });
 
-//Kiểm tra tài khoản đã tồn tại chưa---------------------------------
-route.post('/kiemtra', function(req, res) {
-    var taikhoan = req.body.taiKhoan;
-    var email = req.body.email;
-
-    var sql = "CALL sp_nguoidung_kiemtra(?, ?)";
-
-    db.query(sql, [taikhoan, email], (err, rows) => {
-        if (err) return res.status(500).json({ error: "Có lỗi xảy ra" });
-        res.json({ success: true, message: "Lấy tài khoản thành công", data: rows[0] });
-    });
-});
-
-//Lấy về danh sách người dùng sắp xếp theo ID-------------------------
-route.get('/getall', ensureToken, function(req, res){
+//Lấy về danh sách người dùng sắp xếp theo tăng dần------------------------------
+route.get('/get-asc', function(req, res){
     var sql = "CALL sp_nguoidung_getall_asc()";
 
     db.query(sql, (err, rows) => {
@@ -61,20 +45,18 @@ route.get('/getall', ensureToken, function(req, res){
     });
 });
 
-//Lấy về danh sách người dùng theo quyền------------------------------
-route.post('/getbyquyen', ensureToken, function(req, res){
-    var idquyen = req.body.idQuyen;
-    
-    var sql = "CALL sp_nguoidung_getbyquyen(?)";
+//Lấy về danh sách người dùng sắp xếp theo giảm dần------------------------------
+route.get('/get-desc', function(req, res){
+    var sql = "CALL sp_nguoidung_getall_desc()";
 
-    db.query(sql, [idquyen], (err, rows) => {
+    db.query(sql, (err, rows) => {
         if (err) return res.status(500).json({ error: "Có lỗi xảy ra" });
-        res.json({ success: true, message: "Lấy theo ID thành công", data: rows[0] });
+        res.json({ success: true, message: "Lấy danh sách thành công", data: rows[0] });
     });
 });
 
 //Lấy về 1------------------------------------------------------------
-route.get('/getbyid/:id', ensureToken, function(req, res){
+route.get('/get-by-id/:id', function(req, res){
     var id = req.params.id;
     
     var sql = "CALL sp_nguoidung_getbyid(?)";
@@ -87,69 +69,55 @@ route.get('/getbyid/:id', ensureToken, function(req, res){
 
 //Thêm--------------------------------------------------------------
 route.post('/create', function(req, res) {
-    var taikhoan = req.body.taiKhoan;
-    var matkhau = req.body.matKhau;
-    var email = req.body.email;
-    var ten = req.body.ten;
-    var ngaysinh = req.body.ngaySinh;
-    var diachi = req.body.diaChi;
-    var sdt = req.body.sdt;
-    var gioitinh = req.body.gioiTinh;
-    var anh = req.body.anh;
-    var trangthai = req.body.trangThai;
-    var idquyen = req.body.idQuyen;
+    var taikhoan = req.body.TaiKhoan;
+    var matkhau = req.body.MatKhau;
+    var email = req.body.Email;
+    var ten = req.body.Ten;
+    var diachi = req.body.DiaChi;
+    var sdt = req.body.SoDienThoai;
+    var idquyen = req.body.Quyen_ID;
 
     var hashedPassword = crypto.createHash('md5').update(matkhau).digest('hex');
 
-    var sql = "CALL sp_nguoidung_create(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-    db.query(sql, [taikhoan, hashedPassword, email, ten, ngaysinh, diachi, sdt, gioitinh, anh, trangthai, idquyen], (err, rows) => {
-        if (err) return res.status(500).json({ error: "Có lỗi xảy ra" });
-        res.json({ success: true, message: "Đăng ký thành công", data: rows[0] });
+    // Truy vấn để kiểm tra tài khoản đã tồn tại chưa
+    var checkAccountSql = "CALL sp_nguoidung_kiemtra(?, ?)";
+    db.query(checkAccountSql, [taikhoan, email], (err, rows) => {
+        if (err) return res.status(500).json({ error: "Có lỗi xảy ra khi kiểm tra tài khoản" });
+        
+        // Kiểm tra xem có bất kỳ hàng nào được trả về không
+        if (rows[0].length > 0) {
+            // Nếu có, tài khoản đã tồn tại, trả về thông báo lỗi
+            return res.status(400).json({ error: "Tài khoản hoặc email đã tồn tại" });
+        } else {
+            // Nếu không có, tiến hành tạo tài khoản
+            var createAccountSql = "CALL sp_nguoidung_create(?, ?, ?, ?, ?, ?, ?)";
+            db.query(createAccountSql, [taikhoan, hashedPassword, email, ten, diachi, sdt, idquyen], (err, rows) => {
+                if (err) return res.status(500).json({ error: "Có lỗi xảy ra khi tạo tài khoản" });
+                res.json({ success: true, message: "Đăng ký thành công", data: rows[0] });
+            });
+        }
     });
 });
 
-//Sửa kiểm tra có upfile không--------------------------------------
-route.post('/update/:id', ensureToken, function(req, res) {
-    var fileupload;
-    var pathupload;
-
-    if (req.files) {
-        fileupload = req.files.fileanh;
-        pathupload = path.join(duongdan, 'nguoidung', fileupload.name);
-
-        fileupload.mv(pathupload, (error) => {
-            if (error) return res.status(500).send('Lỗi upload file');
-            update(req, res, fileupload.name);
-        });
-    } else {
-        update(req, res, req.body.anh);
-    }
-});
 
 //Sửa--------------------------------------------------------------
-function update(req, res, img) {
-    var id = req.params.id;
-    var matkhau = req.body.matKhau;
-    var email = req.body.email;
-    var ten = req.body.ten;
-    var ngaysinh = req.body.ngaySinh;
-    var diachi = req.body.diaChi;
-    var sdt = req.body.sdt;
-    var gioitinh = req.body.gioiTinh;
-    var anh = img;
-    var trangthai = req.body.trangThai;
-    var idquyen = req.body.idQuyen;
+route.put('/update', ensureToken, function(req, res){
+    var id = req.body.ID;
+    var matkhau = req.body.MatKhau;
+    var ten = req.body.Ten;
+    var diachi = req.body.DiaChi;
+    var sdt = req.body.SoDienThoai;
+    var idquyen = req.body.Quyen_ID;
 
-    var hashedPassword = matkhau ? crypto.createHash('md5').update(matkhau).digest('hex') : null;
+    var hashedPassword = crypto.createHash('md5').update(matkhau).digest('hex');
 
-    var sql = "CALL sp_nguoidung_update(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    var sql = "CALL sp_nguoidung_update(?, ?, ?, ?, ?, ?)";
 
-    db.query(sql, [id, hashedPassword, email, ten, ngaysinh, diachi, sdt, gioitinh, anh, trangthai, idquyen], (err, rows) => {
+    db.query(sql, [id, hashedPassword, ten, diachi, sdt, idquyen], (err, rows) => {
         if (err) return res.status(500).json({ error: "Có lỗi xảy ra" });
         res.json({ success: true, message: "Sửa thành công", data: rows[0] });
     });
-}
+});
 
 //Xoá---------------------------------------------------------------
 route.delete('/delete/:id', ensureToken, function(req,res){
