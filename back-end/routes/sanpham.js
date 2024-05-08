@@ -12,10 +12,12 @@ const path = require('path');
 const duongdan = path.join(__dirname, '../upload/');
 
 //Lấy về danh sách sản phẩm sắp xếp theo tăng dần------------------------------
-route.get('/get-asc', function(req, res){
-    var sql = "CALL sp_sanpham_getall_asc()";
+route.get('/get-asc/:sl', function(req, res){
+    var sl = req.params.sl;
 
-    db.query(sql, (err, rows) => {
+    var sql = "CALL sp_sanpham_getall_asc(?)";
+
+    db.query(sql, [sl], (err, rows) => {
         if (err) return res.status(500).json({ error: "Có lỗi xảy ra" });
 
         rows[0].forEach(slide => {
@@ -42,10 +44,12 @@ route.get('/get-desc', function(req, res){
 });
 
 //Lấy về danh sách sản phẩm ngẫu nhiên-------------------------------------
-route.get('/get-random', function(req, res){
-    var sql = "CALL sp_sanpham_random()";
+route.get('/get-random/:sl', function(req, res){
+    var sl = req.params.sl;
 
-    db.query(sql, (err, rows) => {
+    var sql = "CALL sp_sanpham_random(?)";
+
+    db.query(sql, [sl], (err, rows) => {
         if (err) return res.status(500).json({ error: "Có lỗi xảy ra" });
 
         rows[0].forEach(slide => {
