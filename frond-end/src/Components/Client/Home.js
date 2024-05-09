@@ -1,14 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Nav, Image, Button } from 'react-bootstrap';
 import { GetSlide_Asc } from '../../services/slideServices';
-import { GetSanPham_asc } from '../../services/sanphamService';
+import { GetSanPham_asc, GetSanPhamNgauNhien } from '../../services/sanphamService';
+import { GetLoaiSanPhamALL } from '../../services/loaisanphamService';
+import { GetByID } from '../../services/sanphamService';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../redux/slices/cartSlice';
 const Home = () => {
     const [data, setData] = useState([]);
     const [currentSlide, setCurrentSlide] = useState(0);
     const [data1, setData1] = useState([]);
+    const [data2, setData2] = useState([]);
+    const [loaisp, setLoaisp] = useState([]);
+
+    const navige = useNavigate();
+    const dispatch = useDispatch();
+    const Themvaogio = (MaSanPham, soluong) => {
+        GetByID(MaSanPham).then(res => {
+            console.log(res)
+            const sanpham = {
+                MaSanPham: res.data[0]?.ID,
+                TenSP: res.data[0]?.Ten,
+                AnhDaiDien: res.data[0]?.Anh,
+                SoLuong: soluong,
+                DonGia: res.data[0]?.Gia,
+            };
+            dispatch(addToCart(sanpham));
+            alert("Sản phẩm đã được thêm vào giỏ hàng");
+        });
+    };
     useEffect(() => {
         getSlide();
         getSanPham_asc();
+        getNgauNhien();
+        getLoaiSP();
     }, [])
     useEffect(() => {
         const interval = setInterval(() => {
@@ -20,11 +46,31 @@ const Home = () => {
         };
     }, [data]);
 
+
+    const getLoaiSP = async () => {
+        try {
+            const res = await GetLoaiSanPhamALL();
+            const data = res && res.data ? res.data : res
+            console.log(data)
+            setLoaisp(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+    const getNgauNhien = async () => {
+        try {
+            const res = await GetSanPhamNgauNhien();
+            const data = res && res.data ? res.data : res
+            setData2(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
     const getSanPham_asc = async () => {
         try {
             const res = await GetSanPham_asc();
             const data = res && res.data ? res.data : res
-            console.log(data)
+            //console.log(data)
             setData1(data);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -34,7 +80,6 @@ const Home = () => {
         try {
             const res = await GetSlide_Asc();
             const data = res && res.data ? res.data : res
-            console.log(data)
             setData(data);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -43,18 +88,23 @@ const Home = () => {
     return (
         <>
             <Row>
-                <Col xs={12} sm={12} md={3} className="sidebar">
-                    <div className="side-menu">
-                        <div className="head"><i className="fas fa-bars fa-fw"></i> Categories</div>
-                        <Nav className="yamm megamenu-horizontal">
-                            <Nav.Item >
-                                <Nav.Link >
-                                    jbjk
-                                </Nav.Link>
-                            </Nav.Item>
-                        </Nav>
+                <div className="col-xs-12 col-sm-12 col-md-3 sidebar">
+
+                    {/* TOP NAVIGATION */}
+                    <div className="side-menu animate-dropdown outer-bottom-xs">
+                        <div className="head"><i className="icon fa fa-align-justify fa-fw"></i> Categories</div>
+                        <nav className="yamm megamenu-horizontal">
+                            <ul className="nav">
+                                {loaisp.map((item, index) => (
+                                    <li className="dropdown menu-item"> <a href="#" className="dropdown-toggle" data-toggle="dropdown">{item.Ten}</a>
+                                    </li>
+                                ))}
+                            </ul>
+                            {/* /.nav */}
+                        </nav>
+                        {/* /.megamenu-horizontal */}
                     </div>
-                </Col>
+                </div>
 
 
                 <Col xs={12} sm={12} md={9} className="homebanner-holder">
@@ -88,14 +138,14 @@ const Home = () => {
                                         <div className="product">
                                             <div className="product-image">
                                                 <a href="detail.html">
-                                                    <Image src={`data:image/jpg;base64,${product.Anh}`} alt={product.name} />
+                                                    <Image src={`data:image/jpg;base64,${product.Anh}`} alt={product.name} style={{ height: '300px', width: '100%', objectFit: 'cover' }} />
                                                 </a>
                                                 {product.isNew && <div className="tag new"><span>New</span></div>}
                                             </div>
                                             <div className="product-info text-center">
-                                                <h3 className="name"><a href="detail.html">{product.Ten}</a></h3>
+                                                <h3 className="name"><a onClick={() => navige(`/XemChiTiet/${product.ID}`)}>{product.Ten}</a></h3>
                                                 <div className="product-price">
-                                                    <span className="price-before-discount">{product.Gia}</span>
+                                                    <span>{product.Gia.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
                                                 </div>
                                             </div>
                                             <div className="cart clearfix text-center animate-effect">
@@ -105,7 +155,52 @@ const Home = () => {
                                                             <Button data-toggle="tooltip" className="btn btn-primary icon" type="button" title="Add Cart">
                                                                 <i className="fa fa-shopping-cart"></i>
                                                             </Button>
-                                                            <Button className="btn btn-primary cart-btn" type="button">Add to cart</Button>
+                                                            <Button onClick={() => { Themvaogio(product.ID, 1) }} className="btn btn-primary cart-btn" type="button">Add to cart</Button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Col>
+                                ))}
+                            </Row>
+                        </div>
+                    </div>
+                </div>
+            </Row>
+
+
+            <Row className="scroll-tabs outer-top-vs">
+                <div className="more-info-tab clearfix">
+                    <h3 className="new-product-title">Sản phẩm ngẫu nhiên</h3>
+                </div>
+                <div className="tab-content outer-top-xs">
+                    <div className="tab-pane in active" id="all">
+                        <div className="product-slider">
+                            <Row className="product-row">
+                                {data2.map((product, index) => (
+                                    <Col xs={12} sm={6} md={4} lg={3} xl={2} key={index} className="product-col">
+                                        <div className="product">
+                                            <div className="product-image">
+                                                <a href="detail.html">
+                                                    <Image src={`data:image/jpg;base64,${product.Anh}`} alt={product.name} style={{ height: '300px', width: '100%', objectFit: 'cover' }} />
+                                                </a>
+                                                {product.isNew && <div className="tag new"><span>New</span></div>}
+                                            </div>
+                                            <div className="product-info text-center">
+                                                <h3 className="name"><a onClick={() => navige(`/XemChiTiet/${product.ID}`)}>{product.Ten}</a></h3>
+                                                <div className="product-price">
+                                                    <span>{product.Gia.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
+                                                </div>
+                                            </div>
+                                            <div className="cart clearfix text-center animate-effect">
+                                                <div className="action">
+                                                    <ul className="list-unstyled">
+                                                        <li className="add-cart-button btn-group">
+                                                            <Button data-toggle="tooltip" className="btn btn-primary icon" type="button" title="Add Cart">
+                                                                <i className="fa fa-shopping-cart"></i>
+                                                            </Button>
+                                                            <Button onClick={() => { Themvaogio(product.ID, 1) }} className="btn btn-primary cart-btn" type="button">Add to cart</Button>
                                                         </li>
                                                     </ul>
                                                 </div>

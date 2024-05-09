@@ -1,6 +1,11 @@
 import React from 'react';
-
+import { useSelector } from 'react-redux';
 const Header = () => {
+    let totalQuantity = useSelector((state) => state.cart.totalQuantity);
+    let totalPrice = useSelector((state) => state.cart.totalPrice);
+    console.log(totalQuantity)
+    const user = useSelector((state) => state.user.account);
+    console.log(user)
     return (
         <header className="header-style-1">
             {/* TOP MENU */}
@@ -66,8 +71,8 @@ const Header = () => {
                                 <a href="#" className="dropdown-toggle lnk-cart" data-toggle="dropdown">
                                     <div className="items-cart-inner">
                                         <div className="basket">
-                                            <div className="basket-item-count"><span className="count">2</span></div>
-                                            <div className="total-price-basket"> <span className="lbl">Shopping Cart</span> <span className="value">$4580</span> </div>
+                                            <div className="basket-item-count"><span className="count">{totalQuantity}</span></div>
+                                            <div className="total-price-basket"> <span className="lbl">Shopping Cart</span>{totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} <span className="value">{ }</span> </div>
                                         </div>
                                     </div>
                                 </a>
