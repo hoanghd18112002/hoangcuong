@@ -185,7 +185,7 @@ route.put('/update', ensureToken, function(req, res) {
             });
         });
     } else {
-        create(req, res, req.body.anh);
+        update(req, res, req.body.anh);
     }
 });
 
