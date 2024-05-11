@@ -33,15 +33,21 @@ export const userSlice = createSlice({
             };
         },
         logout: (state) => {
-            state.loggedIn = false;
-            state.account = {
-                Email: '',
-                HoTen: '',
-                anhDaiDien: '',
-                vaiTro: '',
-                Taikhoan: ''
+            return {
+                ...state,
+                loggedIn: false,
+                account: {
+                    ID: '',
+                    Taikhoan: '',
+                    Email: '',
+                    HoTen: '',
+                    AnhDaiDien: '',
+                    token: '',
+                    Quyen_ID: '',
+                }
             };
-        }
+        },
+
     },
     extraReducers: (builder) => {
 

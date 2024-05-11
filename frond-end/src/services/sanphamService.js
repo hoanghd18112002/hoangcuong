@@ -8,4 +8,10 @@ const GetSanPhamNgauNhien = async () => {
 const GetByID = async (id) => {
     return axios.get(`sanpham/get-by-id/${id}`)
 }
-export { GetSanPham_asc, GetSanPhamNgauNhien, GetByID }
+const getDanhMuc = async (id) => {
+    return axios.get(`sanpham/get-by-loai/${id}`)
+}
+const timKiem = async (obj) => {
+    return axios.post("sanpham/search", obj)
+}
+export { GetSanPham_asc, GetSanPhamNgauNhien, GetByID, getDanhMuc, timKiem }

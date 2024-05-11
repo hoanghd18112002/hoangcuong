@@ -1,16 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Row, Image, Button } from 'react-bootstrap';
 import { GetByID } from '../../services/sanphamService';
-import { useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { GetLoaiSanPhamALL } from '../../services/loaisanphamService';
+import { addToCart } from '../../redux/slices/cartSlice';
 const XemChiTiet = () => {
     const { id } = useParams();
     const [product, setProduct] = useState({});
     const [loaisp, setLoaisp] = useState([]);
+    const navige = useNavigate();
     useEffect(() => {
         getTheoMa();
         getLoaiSP();
     }, []);
+    const [quantity, setQuantity] = useState(1);
+
+    const dispatch = useDispatch();
+    const Themvaogio = () => {
+        if (product) {
+            const sanpham = {
+                MaSanPham: product[0]?.ID,
+                TenSP: product[0]?.Ten,
+                AnhDaiDien: product[0]?.Anh,
+                SoLuong: quantity,
+                DonGia: product[0]?.Gia,
+            };
+            dispatch(addToCart(sanpham));
+            alert("Sản phẩm đã được thêm vào giỏ hàng");
+        } else {
+            console.error('Product is undefined');
+        }
+    };
     const getLoaiSP = async () => {
         try {
             const res = await GetLoaiSanPhamALL();
@@ -44,7 +64,7 @@ const XemChiTiet = () => {
                         <nav className="yamm megamenu-horizontal">
                             <ul className="nav">
                                 {loaisp.map((item, index) => (
-                                    <li className="dropdown menu-item"> <a href="#" className="dropdown-toggle" data-toggle="dropdown">{item.Ten}</a>
+                                    <li className="dropdown menu-item"> <Link className="dropdown-toggle" to={`/danhmuc/${item.ID}`} data-toggle="dropdown">{item.Ten}</Link>
                                     </li>
                                 ))}
                             </ul>
@@ -81,7 +101,7 @@ const XemChiTiet = () => {
                                                 </div>
                                                 <div className="pull-left">
                                                     <div className="reviews">
-                                                        <a href="#" className="lnk">(13 Reviews)</a>
+                                                        <Link className="lnk">(13 Reviews)</Link>
                                                     </div>
                                                 </div>
                                             </div>
@@ -120,18 +140,18 @@ const XemChiTiet = () => {
 
                                             <div className="col-sm-6 col-xs-6">
                                                 <div className="favorite-button m-t-5">
-                                                    <a className="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Wishlist"
-                                                        href="#">
+                                                    <Link className="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Wishlist"
+                                                    >
                                                         <i className="fa fa-heart"></i>
-                                                    </a>
-                                                    <a className="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Add to Compare"
-                                                        href="#">
+                                                    </Link>
+                                                    <Link className="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Add to Compare"
+                                                    >
                                                         <i className="fa fa-signal"></i>
-                                                    </a>
-                                                    <a className="btn btn-primary" data-toggle="tooltip" data-placement="right" title="E-mail"
-                                                        href="#">
+                                                    </Link>
+                                                    <Link className="btn btn-primary" data-toggle="tooltip" data-placement="right" title="E-mail"
+                                                    >
                                                         <i className="fa fa-envelope"></i>
-                                                    </a>
+                                                    </Link>
                                                 </div>
                                             </div>
                                         </div>
@@ -151,13 +171,16 @@ const XemChiTiet = () => {
                                                             <div className="arrow minus gradient"><span className="ir"><i
                                                                 className="icon fa fa-sort-desc"></i></span></div>
                                                         </div>
-                                                        <input type="text" value="1" />
+                                                        <input type="number"
+                                                            value={quantity}
+                                                            onChange={(e) => setQuantity(parseInt(e.target.value))}
+                                                            min="1" />
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className="add-btn">
-                                                <a href="#" className="btn btn-primary"><i className="fa fa-shopping-cart inner-right-vs"></i> ADD TO
-                                                    CART</a>
+                                                <Link className="btn btn-primary" onClick={Themvaogio}><i className="fa fa-shopping-cart inner-right-vs"></i> ADD TO
+                                                    CART</Link>
                                             </div>
                                         </div>
                                     </div>
