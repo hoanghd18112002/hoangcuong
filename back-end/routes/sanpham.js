@@ -142,7 +142,7 @@ route.post('/create', ensureToken, function(req, res) {
 //Thêm-------------------------------------------------------------
 function create(req, res, img) {
     var ten = req.body.Ten;
-    var anh = img ? img : null;
+    var anh = img ? img : '';
     var gia = req.body.Gia;
     var soluong = req.body.SoLuong;
     var thuonghieu = req.body.ThuongHieu;

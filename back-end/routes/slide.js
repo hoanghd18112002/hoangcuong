@@ -88,7 +88,7 @@ route.post('/create', ensureToken, function(req, res) {
 
 //Thêm-------------------------------------------------------------
 function create(req, res, img) {
-    var anh = img ? img : null;
+    var anh = img ? img : '';
 
     var sql = "CALL sp_slide_create(?)";
 

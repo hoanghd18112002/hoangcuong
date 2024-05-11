@@ -89,7 +89,7 @@ route.post('/create', ensureToken, function(req, res) {
 //Thêm-------------------------------------------------------------
 function create(req, res, img) {
     var ten = req.body.Ten;
-    var anh = img ? img : null;
+    var anh = img ? img : '';
     var noidung = req.body.NoiDung;
 
     var sql = "CALL sp_tintuc_create(?, ?, ?)";
