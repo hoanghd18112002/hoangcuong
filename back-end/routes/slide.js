@@ -88,7 +88,7 @@ route.post('/create', ensureToken, function(req, res) {
 
 //Thêm-------------------------------------------------------------
 function create(req, res, img) {
-    var anh = img;
+    var anh = img ? img : null;
 
     var sql = "CALL sp_slide_create(?)";
 
@@ -122,14 +122,14 @@ route.put('/update', ensureToken, function(req, res) {
             });
         });
     } else {
-        create(req, res, req.body.anh);
+        update(req, res, req.body.anh);
     }
 });
 
 //Sửa--------------------------------------------------------------
 function update(req, res, img) {
     var id = req.body.ID;
-    var anh = img;
+    var anh = img ? img : null;
 
     var sql = "CALL sp_slide_update(?, ?)";
 

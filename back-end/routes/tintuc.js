@@ -89,7 +89,7 @@ route.post('/create', ensureToken, function(req, res) {
 //Thêm-------------------------------------------------------------
 function create(req, res, img) {
     var ten = req.body.Ten;
-    var anh = img;
+    var anh = img ? img : null;
     var noidung = req.body.NoiDung;
 
     var sql = "CALL sp_tintuc_create(?, ?, ?)";
@@ -124,7 +124,7 @@ route.put('/update', ensureToken, function(req, res) {
             });
         });
     } else {
-        create(req, res, req.body.anh);
+        update(req, res, req.body.anh);
     }
 });
 
@@ -132,7 +132,7 @@ route.put('/update', ensureToken, function(req, res) {
 function update(req, res, img) {
     var id = req.body.ID;
     var ten = req.body.Ten;
-    var anh = img;
+    var anh = img ? img : null;
     var noidung = req.body.NoiDung;
 
     var sql = "CALL sp_tintuc_update(?, ?, ?, ?)";
