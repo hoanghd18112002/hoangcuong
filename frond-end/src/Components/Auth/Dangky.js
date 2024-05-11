@@ -57,19 +57,19 @@ const Dangky = () => {
                         </div>
                         <div className="form-group">
                             <label style={{ color: '#333' }}>Email<span className="text-danger">*</span></label>
-                            <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" id="exampleInputEmail1" placeholder="Enter username" style={{ width: '100%', padding: '15px', borderRadius: '5px', border: '1px solid #ccc' }} />
+                            <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" id="exampleInputEmail1" placeholder="Enter Email" style={{ width: '100%', padding: '15px', borderRadius: '5px', border: '1px solid #ccc' }} />
                         </div>
                         <div className="form-group">
                             <label style={{ color: '#333' }}>Họ tên <span className="text-danger">*</span></label>
-                            <input type="text" value={ten} onChange={(e) => setTen(e.target.value)} className="form-control" id="exampleInputEmail1" placeholder="Enter username" style={{ width: '100%', padding: '15px', borderRadius: '5px', border: '1px solid #ccc' }} />
+                            <input type="text" value={ten} onChange={(e) => setTen(e.target.value)} className="form-control" id="exampleInputEmail1" placeholder="Enter Họ tên" style={{ width: '100%', padding: '15px', borderRadius: '5px', border: '1px solid #ccc' }} />
                         </div>
                         <div className="form-group">
                             <label style={{ color: '#333' }}>Địa chỉ <span className="text-danger">*</span></label>
-                            <input type="text" value={diaChi} onChange={(e) => setDiaChi(e.target.value)} className="form-control" id="exampleInputEmail1" placeholder="Enter username" style={{ width: '100%', padding: '15px', borderRadius: '5px', border: '1px solid #ccc' }} />
+                            <input type="text" value={diaChi} onChange={(e) => setDiaChi(e.target.value)} className="form-control" id="exampleInputEmail1" placeholder="Enter Địa chỉ" style={{ width: '100%', padding: '15px', borderRadius: '5px', border: '1px solid #ccc' }} />
                         </div>
                         <div className="form-group">
                             <label style={{ color: '#333' }}>SDT <span className="text-danger">*</span></label>
-                            <input type="text" value={soDienThoai} onChange={(e) => setSoDienThoai(e.target.value)} className="form-control" id="exampleInputEmail1" placeholder="Enter username" style={{ width: '100%', padding: '15px', borderRadius: '5px', border: '1px solid #ccc' }} />
+                            <input type="text" value={soDienThoai} onChange={(e) => setSoDienThoai(e.target.value)} className="form-control" id="exampleInputEmail1" placeholder="Enter SĐT" style={{ width: '100%', padding: '15px', borderRadius: '5px', border: '1px solid #ccc' }} />
                         </div>
                         <button type="submit" className="btn btn-primary btn-block" style={{ backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '5px', padding: '15px', fontSize: '16px' }}>Đăng ký</button>
                     </form>
