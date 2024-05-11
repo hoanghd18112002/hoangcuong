@@ -9,7 +9,7 @@ const ensureToken = require('./auth');
 var router = express.Router();
 
 const path = require('path');
-const duongdan = path.join(__dirname, '../upload/');
+const duongdan = path.join(__dirname, './upload/');
 
 //Lấy về danh sách sản phẩm sắp xếp theo tăng dần------------------------------
 route.get('/get-asc/:sl', function(req, res){
