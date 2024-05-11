@@ -27,7 +27,7 @@ const DangNhap = () => {
             }).then((result) => {
                 if (result.isConfirmed) {
                     dispatch(loginSuccess(res.data))
-                    navigate('/ad-sanpham');
+                    navigate('/');
                 }
             });
         }

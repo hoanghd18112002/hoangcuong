@@ -83,6 +83,7 @@ const SideBar = () => {
                         <div className="bg-white py-2 collapse-inner rounded">
                             <Link className="collapse-item" to="/ad-sanpham">Quản lý sản phẩm</Link>
                             <Link className="collapse-item" to="/ad-loaisp">Quản lý loại sản phẩm</Link>
+                            <Link className="collapse-item" to="/ad-slide">Quản lý Slide</Link>
                             <Link className="collapse-item" to="/ad-quyen">Quản lý quyền</Link>
                             <Link className="collapse-item" to="/ad-donhang">Quản lý đơn hàng</Link>
                         </div>
