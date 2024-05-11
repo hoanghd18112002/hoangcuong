@@ -94,7 +94,7 @@ const Home = () => {
                         <nav className="yamm megamenu-horizontal">
                             <ul className="nav">
                                 {loaisp.map((item, index) => (
-                                    <li className="dropdown menu-item"> <Link className="dropdown-toggle" data-toggle="dropdown">{item.Ten}</Link>
+                                    <li className="dropdown menu-item"> <Link className="dropdown-toggle" to={`/danhmuc/${item.ID}`} data-toggle="dropdown">{item.Ten}</Link>
                                     </li>
                                 ))}
                             </ul>
