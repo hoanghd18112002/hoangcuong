@@ -18,6 +18,8 @@ const DangNhap = () => {
             MatKhau: matKhau
         };
         let res = await Login(obj)
+
+        console.log(res.data)
         dispatch(loginSuccess(res.data))
         if (res && res.data) {
             Swal.fire({
@@ -42,7 +44,7 @@ const DangNhap = () => {
                 <h4 className="mb-4" style={{ color: '#333' }}>Sign in</h4>
                 <p className="mb-4" style={{ color: '#666' }}>Hello, Welcome to your account.</p>
 
-                <form className="register-form outer-top-xs" role="form" onSubmit={handleSubmit}>
+                <form className="register-form outer-top-xs" onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label style={{ color: '#333' }}>Tài khoản <span className="text-danger">*</span></label>
                         <input type="text" value={taiKhoan} onChange={(e) => setTaiKhoan(e.target.value)} className="form-control" id="exampleInputEmail1" placeholder="Enter username" style={{ width: '100%', padding: '15px', borderRadius: '5px', border: '1px solid #ccc' }} />

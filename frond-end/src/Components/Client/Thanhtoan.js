@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { CreateHoaDon } from '../../services/hoadonService';
 import { xoaAll } from '../../redux/slices/cartSlice';
@@ -7,7 +7,7 @@ const ThanhToan = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const cart = useSelector((state) => state.cart.items);
-    const totalQuantity = useSelector((state) => state.cart.totalQuantity);
+    //const totalQuantity = useSelector((state) => state.cart.totalQuantity);
     const totalPrice = useSelector((state) => state.cart.totalPrice);
     const user = useSelector((state) => state.user.account);
     const [customerInfo, setCustomerInfo] = useState({
@@ -15,10 +15,6 @@ const ThanhToan = () => {
         DiaChi: '',
         SoDienThoai: '',
     });
-
-    useEffect(() => {
-        // Effect logic here
-    }, [])
 
 
     const handleChange = (e) => {
@@ -32,7 +28,7 @@ const ThanhToan = () => {
             DiaChi: DiaChi,
             SoDienThoai: SoDienThoai,
             NguoiDung_ID: user.account.ID,
-            TrangThai: 1,
+            TrangThai: 0,
             ListChiTiet: []
         };
         cart.forEach(sanpham => {

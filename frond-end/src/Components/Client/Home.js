@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Nav, Image, Button } from 'react-bootstrap';
+import { Row, Col, Image, Button } from 'react-bootstrap';
 import { GetSlide_Asc } from '../../services/slideServices';
 import { GetSanPham_asc, GetSanPhamNgauNhien } from '../../services/sanphamService';
 import { GetLoaiSanPhamALL } from '../../services/loaisanphamService';
 import { GetByID } from '../../services/sanphamService';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../redux/slices/cartSlice';
+import { Link } from 'react-router-dom';
 const Home = () => {
     const [data, setData] = useState([]);
     const [currentSlide, setCurrentSlide] = useState(0);
     const [data1, setData1] = useState([]);
     const [data2, setData2] = useState([]);
     const [loaisp, setLoaisp] = useState([]);
-
-    const navige = useNavigate();
     const dispatch = useDispatch();
     const Themvaogio = (MaSanPham, soluong) => {
         GetByID(MaSanPham).then(res => {
@@ -96,7 +94,7 @@ const Home = () => {
                         <nav className="yamm megamenu-horizontal">
                             <ul className="nav">
                                 {loaisp.map((item, index) => (
-                                    <li className="dropdown menu-item"> <a href="#" className="dropdown-toggle" data-toggle="dropdown">{item.Ten}</a>
+                                    <li className="dropdown menu-item"> <Link className="dropdown-toggle" data-toggle="dropdown">{item.Ten}</Link>
                                     </li>
                                 ))}
                             </ul>
@@ -143,7 +141,7 @@ const Home = () => {
                                                 {product.isNew && <div className="tag new"><span>New</span></div>}
                                             </div>
                                             <div className="product-info text-center">
-                                                <h3 className="name"><a onClick={() => navige(`/XemChiTiet/${product.ID}`)}>{product.Ten}</a></h3>
+                                                <h3 className="name"><Link to={`/XemChiTiet/${product.ID}`}>{product.Ten}</Link></h3>
                                                 <div className="product-price">
                                                     <span>{product.Gia.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
                                                 </div>
@@ -179,7 +177,7 @@ const Home = () => {
                         <div className="product-slider">
                             <Row className="product-row">
                                 {data2.map((product, index) => (
-                                    <Col xs={12} sm={6} md={4} lg={3} xl={2} key={index} className="product-col">
+                                    <Col xs={12} sm={6} md={4} lg={3} xl={2} key={index + 1} className="product-col">
                                         <div className="product">
                                             <div className="product-image">
                                                 <a href="detail.html">
@@ -188,7 +186,7 @@ const Home = () => {
                                                 {product.isNew && <div className="tag new"><span>New</span></div>}
                                             </div>
                                             <div className="product-info text-center">
-                                                <h3 className="name"><a onClick={() => navige(`/XemChiTiet/${product.ID}`)}>{product.Ten}</a></h3>
+                                                <h3 className="name"><Link to={`/XemChiTiet/${product.ID}`}>{product.Ten}</Link></h3>
                                                 <div className="product-price">
                                                     <span>{product.Gia.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
                                                 </div>
