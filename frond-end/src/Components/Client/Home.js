@@ -132,16 +132,23 @@ const Home = () => {
                         <div className="product-slider">
                             <Row className="product-row">
                                 {data1.map((product, index) => (
-                                    <Col xs={12} sm={6} md={4} lg={3} xl={2} key={index} className="product-col">
+                                    <Col key={product.ID} xs={6} sm={6} md={4} lg={3} xl={3} className="product-col">
                                         <div className="product">
                                             <div className="product-image">
-                                                <a href="detail.html">
-                                                    <Image src={`data:image/jpg;base64,${product.Anh}`} alt={product.name} style={{ height: '300px', width: '100%', objectFit: 'cover' }} />
-                                                </a>
+                                                <Image
+                                                    src={`data:image/jpg;base64,${product.Anh}`}
+                                                    alt={product.name}
+                                                    fluid
+                                                    style={{ height: '300px' }}
+                                                />
                                                 {product.isNew && <div className="tag new"><span>New</span></div>}
                                             </div>
                                             <div className="product-info text-center">
-                                                <h3 className="name"><Link to={`/XemChiTiet/${product.ID}`}>{product.Ten}</Link></h3>
+                                                <h3 className="name">
+                                                    <Link href={`/XemChiTiet/${product.ID}`}>
+                                                        {product.Ten.length > 15 ? product.Ten.substring(0, 15) + "..." : product.Ten}
+                                                    </Link>
+                                                </h3>
                                                 <div className="product-price">
                                                     <span>{product.Gia.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
                                                 </div>
@@ -153,7 +160,7 @@ const Home = () => {
                                                             <Button data-toggle="tooltip" className="btn btn-primary icon" type="button" title="Add Cart">
                                                                 <i className="fa fa-shopping-cart"></i>
                                                             </Button>
-                                                            <Button onClick={() => { Themvaogio(product.ID, 1) }} className="btn btn-primary cart-btn" type="button">Add to cart</Button>
+                                                            <Button onClick={() => { Themvaogio(product.ID, 1) }} className="btn btn-primary cart-btn" type="button">Add to Cart</Button>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -166,8 +173,6 @@ const Home = () => {
                     </div>
                 </div>
             </Row>
-
-
             <Row className="scroll-tabs outer-top-vs">
                 <div className="more-info-tab clearfix">
                     <h3 className="new-product-title">Sản phẩm ngẫu nhiên</h3>
@@ -177,16 +182,23 @@ const Home = () => {
                         <div className="product-slider">
                             <Row className="product-row">
                                 {data2.map((product, index) => (
-                                    <Col xs={12} sm={6} md={4} lg={3} xl={2} key={index + 1} className="product-col">
+                                    <Col key={product.ID} xs={6} sm={6} md={4} lg={3} xl={3} className="product-col">
                                         <div className="product">
                                             <div className="product-image">
-                                                <a href="detail.html">
-                                                    <Image src={`data:image/jpg;base64,${product.Anh}`} alt={product.name} style={{ height: '300px', width: '100%', objectFit: 'cover' }} />
-                                                </a>
+                                                <Image
+                                                    src={`data:image/jpg;base64,${product.Anh}`}
+                                                    alt={product.name}
+                                                    fluid
+                                                    style={{ height: '300px' }}
+                                                />
                                                 {product.isNew && <div className="tag new"><span>New</span></div>}
                                             </div>
                                             <div className="product-info text-center">
-                                                <h3 className="name"><Link to={`/XemChiTiet/${product.ID}`}>{product.Ten}</Link></h3>
+                                                <h3 className="name">
+                                                    <Link href={`/XemChiTiet/${product.ID}`}>
+                                                        {product.Ten.length > 15 ? product.Ten.substring(0, 15) + "..." : product.Ten}
+                                                    </Link>
+                                                </h3>
                                                 <div className="product-price">
                                                     <span>{product.Gia.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
                                                 </div>
@@ -198,7 +210,7 @@ const Home = () => {
                                                             <Button data-toggle="tooltip" className="btn btn-primary icon" type="button" title="Add Cart">
                                                                 <i className="fa fa-shopping-cart"></i>
                                                             </Button>
-                                                            <Button onClick={() => { Themvaogio(product.ID, 1) }} className="btn btn-primary cart-btn" type="button">Add to cart</Button>
+                                                            <Button onClick={() => { Themvaogio(product.ID, 1) }} className="btn btn-primary cart-btn" type="button">Add to Cart</Button>
                                                         </li>
                                                     </ul>
                                                 </div>

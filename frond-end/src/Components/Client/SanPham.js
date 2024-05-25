@@ -58,13 +58,20 @@ const SanPham = () => {
                                     <Col xs={12} sm={6} md={4} lg={3} xl={2} key={index} className="product-col">
                                         <div className="product">
                                             <div className="product-image">
-                                                <a href="detail.html">
-                                                    <Image src={`data:image/jpg;base64,${product.Anh}`} alt={product.name} style={{ height: '300px', width: '100%', objectFit: 'cover' }} />
-                                                </a>
+                                                <Image
+                                                    src={`data:image/jpg;base64,${product.Anh}`}
+                                                    alt={product.name}
+                                                    fluid
+                                                    style={{ height: '300px' }}
+                                                />
                                                 {product.isNew && <div className="tag new"><span>New</span></div>}
                                             </div>
                                             <div className="product-info text-center">
-                                                <h3 className="name"><Link to={`/XemChiTiet/${product.ID}`}>{product.Ten}</Link></h3>
+                                                <h3 className="name">
+                                                    <Link href={`/XemChiTiet/${product.ID}`}>
+                                                        {product.Ten.length > 15 ? product.Ten.substring(0, 15) + "..." : product.Ten}
+                                                    </Link>
+                                                </h3>
                                                 <div className="product-price">
                                                     <span>{product.Gia.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
                                                 </div>
